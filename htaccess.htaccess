@@ -1,0 +1,25 @@
+# ELEXA EV – clean URLs (remove .html)
+# Upload to your hosting's public_html folder (same folder as index.html)
+# and rename this file to:  .htaccess
+
+Options -MultiViews
+DirectoryIndex index.html index.php
+RewriteEngine On
+
+# 1) /index.html  ->  /
+RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+RewriteRule ^index\.html$ / [R=301,L]
+
+# 2) /dealers.html  ->  /dealers   (keeps #anchors and ?query)
+RewriteCond %{THE_REQUEST} \s/+([^\s?]+?)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# 3) /dealers  ->  loads dealers.html internally
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^([^.]+?)/?$ $1.html [L]
+
+# 4) /contact-send  ->  loads contact-send.php internally (for PHP forms)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^.]+?)/?$ $1.php [L]
